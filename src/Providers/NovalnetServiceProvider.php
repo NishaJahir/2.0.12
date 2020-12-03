@@ -337,8 +337,10 @@ class NovalnetServiceProvider extends ServiceProvider
 											$serverRequestData['data']['key'] = '41';
 										        $serverRequestData['data']['birth_date'] = !empty($birthday) ? $birthday : '';
 										}
+										
 									$sessionStorage->getPlugin()->setValue('nnPaymentData', $serverRequestData['data']);
-									$response = $paymentHelper->executeCurl($serverRequestData['data'], $serverRequestData['url']);
+									$this->getLogger(__METHOD__)->error('provider session', $serverRequestData['data']);
+										$response = $paymentHelper->executeCurl($serverRequestData['data'], $serverRequestData['url']);
 									$responseData = $paymentHelper->convertStringToArray($response['response'], '&');	
 									if ($responseData['status'] == '100') {
 										$notificationMessage = $paymentHelper->getNovalnetStatusText($responseData); 
@@ -349,7 +351,9 @@ class NovalnetServiceProvider extends ServiceProvider
 										$content = $paymentHelper->getNovalnetStatusText($responseData); 
 									}
 									$responseData['payment_id'] = (!empty($responseData['payment_id'])) ? $responseData['payment_id'] : $responseData['key'];
-									$sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($serverRequestData['data'], $responseData));
+									$this->getLogger(__METHOD__)->error('provider session1', $serverRequestData['data']);
+										$sessionStorage->getPlugin()->setValue('nnPaymentData', array_merge($serverRequestData['data'], $responseData));
+									$this->getLogger(__METHOD__)->error('provider session2', $responseData);
 									}
 									
 									} 
