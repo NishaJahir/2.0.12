@@ -154,6 +154,7 @@ class PaymentService
     public function validateResponse()
     {
         $nnPaymentData = $this->sessionStorage->getPlugin()->getValue('nnPaymentData');
+	    $this->getLogger(__METHOD__)->error('validate response session', $nnPaymentData);
         $lang = strtolower((string)$nnPaymentData['lang']);
         $this->sessionStorage->getPlugin()->setValue('nnPaymentData', null);
         
@@ -162,6 +163,7 @@ class PaymentService
         $nnPaymentData['payment_method'] = strtolower($this->paymentHelper->getPaymentKeyByMop($nnPaymentData['mop']));
         
         $this->executePayment($nnPaymentData);
+	    $this->getLogger(__METHOD__)->error('validate response executepayment', $nnPaymentData);
         
         if($nnPaymentData['payment_id'] == '59' && !empty($nnPaymentData['cp_checkout_token']))
         {
@@ -193,9 +195,11 @@ class PaymentService
             $transactionData['callback_amount'] = 0;    
 
         $this->transactionLogData->saveTransaction($transactionData);
-        
+        $this->getLogger(__METHOD__)->error('validate response transaction Data', $transactionData);
         if(!$this->isRedirectPayment(strtoupper($nnPaymentData['payment_method']))) {
+	   $this->getLogger(__METHOD__)->error('validate response post Data', $nnPaymentData['payment_method']);
             $this->sendPostbackCall($nnPaymentData);
+	  $this->getLogger(__METHOD__)->error('validate response post called success', $nnPaymentData);
         }
      }
      
